@@ -9,7 +9,7 @@ export type PRListItemProps = {
 
 export const PRListItem: React.FC<PRListItemProps> = ({ pr, statusColor = 'gray' }) => {
   return (
-    <li className="border-border rounded-2xl border px-4 py-3">
+    <li className="border-border hover:bg-surface rounded-2xl border px-4 py-3">
       <a href={pr.html_url} target="_blank" rel="noreferrer" className="group block">
         <div className="flex items-baseline justify-between gap-4">
           <div className="min-w-0">

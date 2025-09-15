@@ -34,13 +34,14 @@ body,
 /* Runtime dark theme override (works with class or attribute on <html>) */
 html[data-theme='dark'],
 html.dark {
-  --color-bg: oklch(13% 0.02 255);
-  --color-fg: oklch(96% 0.02 255);
-  --color-surface: oklch(18% 0.02 255);
-  --color-muted: oklch(70% 0.02 255);
-  --color-border: oklch(30% 0.02 255);
-  --color-accent: oklch(70% 0.16 262);
-  --color-accent-fg: oklch(10% 0 0);
+  /* Dark palette based on: #000814, #001D3D, #003566, #FFC300, #FFD60A */
+  --color-bg: #000814; /* background */
+  --color-fg: #f8fafc; /* foreground text */
+  --color-surface: #001d3d; /* cards/panels */
+  --color-muted: #9fb3c8; /* secondary text */
+  --color-border: #003566; /* borders/dividers */
+  --color-accent: #ffc300; /* primary accent */
+  --color-accent-fg: #0a0a0a; /* text on accent */
   --color-danger: oklch(65% 0.18 25);
   --color-danger-fg: oklch(10% 0 0);
 }

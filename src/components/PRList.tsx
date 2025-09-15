@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import RepoLinks from './RepoLinks'
 import { usePullRequests, usePrStatuses } from '../api/usePullRequests'
 import type { GithubPullRequest } from '../types/github'
 import PRListItem from './PRListItem'
@@ -106,8 +107,9 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
       <div>
         {groupedByRepo.map(([repoFullName, prs]) => (
           <section key={repoFullName} className="mb-6">
-            <h3 className="text-muted mb-2 px-2 text-xs font-semibold tracking-wide uppercase">
-              {repoFullName}
+            <h3 className="text-accent mb-2 flex items-center gap-2 px-2 text-sm font-medium tracking-wide uppercase">
+              <span className="leading-none">{repoFullName}</span>
+              <RepoLinks repoFullName={repoFullName} />
             </h3>
             <ul className="divide-border/70 space-y-3 divide-y">
               {prs.map((pr) => (
