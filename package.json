@@ -1,6 +1,7 @@
 {
   "name": "gh-pr-dashboard",
   "private": true,
+  "homepage": "https://goglichidzemike.github.io/pr-dashboard/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
