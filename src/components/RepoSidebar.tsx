@@ -20,6 +20,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
   const selected = new Set(selectedFullNames)
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+  const [allExpanded, setAllExpanded] = useState(false)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -66,21 +67,23 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
     })
   }, [groups])
 
-  const setAllGroups = (value: boolean) => {
+  const toggleAllGroups = () => {
+    const value = allExpanded
+    setAllExpanded(!allExpanded)
     const next: Record<string, boolean> = {}
     for (const [group] of groups) next[group] = value
     setExpanded(next)
   }
 
   return (
-    <aside className="h-full w-72 shrink-0 border-r border-border bg-surface/50 p-4">
+    <aside className="h-full min-h-screen pt-24 w-72 shrink-0 border-r border-border bg-surface/50 px-4 pb-0">
       <RepoSidebarHeader right={headerExtras} />
 
       <div className="mb-3">
         <SearchInput value={query} onChange={setQuery} placeholder="Search repos" />
       </div>
 
-      <RepoScopeToggle scope={scope} onChange={onScopeChange} onExpandAll={() => setAllGroups(true)} onCollapseAll={() => setAllGroups(false)} />
+      <RepoScopeToggle scope={scope} onChange={onScopeChange} toggleCollapse={toggleAllGroups} />
 
       <div className="flex max-h-[calc(100vh-14rem)] flex-col gap-2 overflow-auto pr-2">
         {groups.map(([group, repos]) => (

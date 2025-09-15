@@ -34,15 +34,15 @@ export class GithubClient {
     return this.request<GithubUser>('/user')
   }
 
-  async listUserRepos(params?: { visibility?: 'all' | 'public' | 'private' }): Promise<GithubRepo[]> {
+  async listUserRepos(params?: { visibility?: 'all' | 'public' | 'private'; includePersonal?: boolean }): Promise<GithubRepo[]> {
     const visibility = params?.visibility ?? 'all'
+    const includePersonal = params?.includePersonal ?? true
     const per_page = 100
     const repos: GithubRepo[] = []
     let page = 1
     while (true) {
-      const pageData = await this.request<GithubRepo[]>(
-        `/user/repos?visibility=${visibility}&affiliation=owner,collaborator,organization_member&per_page=${per_page}&page=${page}`
-      )
+      const affiliation = includePersonal ? 'owner,collaborator,organization_member' : 'organization_member'
+      const pageData = await this.request<GithubRepo[]>(`/user/repos?visibility=${visibility}&affiliation=${affiliation}&per_page=${per_page}&page=${page}`)
       repos.push(
         ...pageData.map((r) => {
           const ownerType = (r as any).owner?.type as 'User' | 'Organization' | undefined

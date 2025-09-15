@@ -7,7 +7,7 @@ export type PRListItemProps = {
 
 export const PRListItem: React.FC<PRListItemProps> = ({ pr }) => {
   return (
-    <li className="py-3">
+    <li className="py-3 border rounded-2xl px-4 border-border">
       <a
         href={pr.html_url}
         target="_blank"

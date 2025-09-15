@@ -1,14 +1,14 @@
 import React from 'react'
 import type { RepoScope } from './RepoSidebar'
+import { NavArrowDown, NavArrowUp } from 'iconoir-react'
 
 export type RepoScopeToggleProps = {
   scope: RepoScope
   onChange: (scope: RepoScope) => void
-  onExpandAll?: () => void
-  onCollapseAll?: () => void
+  toggleCollapse: () => void
 }
 
-export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({ scope, onChange, onExpandAll, onCollapseAll }) => {
+export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({ scope, onChange, toggleCollapse }) => {
   return (
     <div className="mb-3 flex items-center justify-between gap-2 text-xs text-fg">
       <div className="flex items-center gap-2">
@@ -26,8 +26,10 @@ export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({ scope, onChang
         </label>
       </div>
       <div className="flex items-center gap-2">
-        <button type="button" onClick={onExpandAll} className="text-muted hover:underline">Expand all</button>
-        <button type="button" onClick={onCollapseAll} className="text-muted hover:underline">Collapse all</button>
+        <div onClick={toggleCollapse} className="text-muted hover:underline cursor-pointer flex gap-2">
+          <NavArrowUp className="w-4 h-4" />
+          <NavArrowDown className="w-4 h-4" />
+        </div>
       </div>
     </div>
   )

@@ -46,14 +46,13 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
     return list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
   }, [allPrs, hideDrafts, query])
 
-  const groupedByOrg = useMemo(() => {
+  const groupedByRepo = useMemo(() => {
     const groups = new Map<string, GithubPullRequest[]>()
     for (const pr of filteredPrs) {
-      const full = pr.repository?.full_name || ''
-      const org = full.split('/')[0] || 'Personal'
-      const arr = groups.get(org) ?? []
+      const repoFullName = pr.repository?.full_name || 'unknown/unknown'
+      const arr = groups.get(repoFullName) ?? []
       arr.push(pr)
-      groups.set(org, arr)
+      groups.set(repoFullName, arr)
     }
     return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b))
   }, [filteredPrs])
@@ -87,9 +86,9 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
         onQueryChange={setQuery}
       />
       <div>
-        {groupedByOrg.map(([org, prs]) => (
-          <section key={org} className="mb-6">
-            <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted">{org}</h3>
+        {groupedByRepo.map(([repoFullName, prs]) => (
+          <section key={repoFullName} className="mb-6">
+            <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted">{repoFullName}</h3>
             <ul className="divide-y divide-border/70">
               {prs.map((pr) => (
                 <PRListItem key={pr.id} pr={pr} />

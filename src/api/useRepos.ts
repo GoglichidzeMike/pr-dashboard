@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import type { GithubRepo } from '../types/github'
 import { fetchUserRepos } from '../services/repos'
 
-export function useRepos(token: string) {
+export function useRepos(token: string, includePersonal: boolean) {
   return useQuery<GithubRepo[]>({
-    queryKey: ['repos', 'user', token],
-    queryFn: async () => (token ? fetchUserRepos(token) : []),
+    queryKey: ['repos', 'user', token, includePersonal],
+    queryFn: async () => (token ? fetchUserRepos(token, includePersonal) : []),
     enabled: Boolean(token),
     staleTime: 60_000,
     select: (repos) => {
