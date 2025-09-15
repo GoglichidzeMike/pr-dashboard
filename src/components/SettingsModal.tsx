@@ -1,10 +1,13 @@
 import React from 'react'
+import TokenInput from './TokenInput'
 
 export type SettingsModalProps = {
   open: boolean
   onClose: () => void
   includePersonal: boolean
   onIncludePersonalChange: (value: boolean) => void
+  token: string
+  onTokenChange: (value: string) => void
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -12,6 +15,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   includePersonal,
   onIncludePersonalChange,
+  token,
+  onTokenChange,
 }) => {
   if (!open) return null
   return (
@@ -19,6 +24,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative z-10 w-full max-w-md rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 shadow-xl">
         <h2 className="mb-3 text-base font-semibold">Settings</h2>
+        <div className="mb-4 space-y-2">
+          <label className="block text-xs font-medium text-[color:var(--color-muted)]">
+            GitHub Personal Access Token
+          </label>
+          <TokenInput value={token} onChange={onTokenChange} />
+          <p className="text-[11px] text-[color:var(--color-muted)]">
+            Stored locally in your browser only.
+          </p>
+        </div>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"

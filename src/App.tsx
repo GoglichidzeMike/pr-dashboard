@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useRepos } from './api/useRepos'
 import type { GithubRepo } from './types/github'
-import TokenInput from './components/TokenInput'
 import RepoSidebar, { type RepoScope } from './components/RepoSidebar'
 import PRList from './components/PRList'
 import ThemeToggle from './components/ThemeToggle'
@@ -42,13 +41,12 @@ const App: React.FC = () => {
           <h1 className="text-lg font-semibold">GitHub PR Dashboard</h1>
 
           <div className="flex gap-2">
-            <TokenInput value={token} onChange={setToken} />
-            <div className="border-border flex items-center gap-2 border-l pl-2">
+            <div className="border-border flex items-center gap-2">
               <ThemeToggle />
               <button
                 type="button"
                 onClick={() => setSettingsOpen(true)}
-                className="rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-2 text-sm text-[color:var(--color-fg)] hover:bg-[color:var(--color-surface)]/70"
+                className="cursor-pointer rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-2 text-sm text-[color:var(--color-fg)] hover:bg-[color:var(--color-surface)]/70"
               >
                 Settings
               </button>
@@ -77,6 +75,8 @@ const App: React.FC = () => {
         onClose={() => setSettingsOpen(false)}
         includePersonal={includePersonal}
         onIncludePersonalChange={setIncludePersonal}
+        token={token}
+        onTokenChange={setToken}
       />
     </div>
   )
