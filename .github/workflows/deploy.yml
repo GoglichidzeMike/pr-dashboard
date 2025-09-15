@@ -21,18 +21,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Read Node version from package.json
+        id: pkg
+        run: |
+          echo "node_version=$(jq -r '.engines.node // \"20\"' package.json)" >> $GITHUB_OUTPUT
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: ${{ steps.pkg.outputs.node_version }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        # Use repo name as base path so assets work on Pages (/<repo>/)
-        run: npm run build -- --base=/${{ github.event.repository.name }}/
+        run: pnpm build -- --base=/${{ github.event.repository.name }}/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
