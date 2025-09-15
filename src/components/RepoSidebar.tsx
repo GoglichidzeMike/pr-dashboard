@@ -73,7 +73,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
   }
 
   return (
-    <aside className="h-full w-72 shrink-0 border-r border-slate-200 bg-white/50 p-4 dark:border-slate-800 dark:bg-slate-900/50">
+    <aside className="h-full w-72 shrink-0 border-r border-border bg-surface/50 p-4">
       <RepoSidebarHeader right={headerExtras} />
 
       <div className="mb-3">
@@ -87,7 +87,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
           <div key={group}>
             <button
               type="button"
-              className="mb-1 mt-2 flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wide text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              className="mb-1 mt-2 flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wide text-muted hover:text-fg"
               onClick={() => setExpanded((prev) => ({ ...prev, [group]: !(prev[group] ?? true) }))}
               aria-expanded={expanded[group] ?? true}
             >
@@ -104,7 +104,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="text-sm text-slate-500">No repositories match.</div>
+          <div className="text-sm text-muted">No repositories match.</div>
         )}
       </div>
     </aside>

@@ -12,14 +12,14 @@ export const RepoListItem: React.FC<RepoListItemProps> = ({ repo, isSelected, on
   const nameOnly = repo.name
 
   return (
-    <label className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800">
+    <label className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-surface">
       <input
         type="checkbox"
-        className="h-4 w-4 shrink-0 accent-slate-700"
+        className="h-4 w-4 shrink-0 accent-accent"
         checked={isSelected}
         onChange={() => onToggle(fullName)}
       />
-      <span className="truncate text-sm">{nameOnly}</span>
+      <span className="truncate text-sm text-fg">{nameOnly}</span>
     </label>
   )
 }

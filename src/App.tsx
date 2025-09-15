@@ -4,6 +4,7 @@ import type { GithubRepo } from './types/github'
 import TokenInput from './components/TokenInput'
 import RepoSidebar, { type RepoScope } from './components/RepoSidebar'
 import PRList from './components/PRList'
+import ThemeToggle from './components/ThemeToggle'
 
 
 const App: React.FC = () => {
@@ -26,10 +27,13 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/70 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70">
+    <div className="min-h-screen bg-[color:var(--color-bg)] text-[color:var(--color-fg)]">
+      <header className="sticky top-0 z-10 border-b border-[color:var(--color-border)] bg-[color:var(--color-surface)]/70 backdrop-blur">
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-4 p-4">
           <h1 className="text-lg font-semibold">GitHub PR Dashboard</h1>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+          </div>
           <div className="w-full max-w-xl">
             <TokenInput value={token} onChange={setToken} />
           </div>
@@ -41,16 +45,16 @@ const App: React.FC = () => {
           repos={allRepos}
           selectedFullNames={selected}
           onToggle={toggleRepo}
-          headerExtras={<span className="text-xs text-slate-500">{allRepos.length}</span>}
+          headerExtras={<span className="text-xs text-muted">{allRepos.length}</span>}
           scope={scope}
           onScopeChange={setScope}
         />
         <section className="flex-1">
           {isUserError && (
-            <div className="p-6 text-red-600">{(userError as Error)?.message}</div>
+            <div className="p-6 text-danger">{(userError as Error)?.message}</div>
           )}
           {isLoadingUser && token && (
-            <div className="p-6 text-slate-500">Loading repositories…</div>
+            <div className="p-6 text-muted">Loading repositories…</div>
           )}
           <PRList token={token} selectedRepoFullNames={selected} />
         </section>

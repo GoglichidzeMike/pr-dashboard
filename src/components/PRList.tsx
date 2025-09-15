@@ -46,21 +46,33 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
     return list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
   }, [allPrs, hideDrafts, query])
 
+  const groupedByOrg = useMemo(() => {
+    const groups = new Map<string, GithubPullRequest[]>()
+    for (const pr of filteredPrs) {
+      const full = pr.repository?.full_name || ''
+      const org = full.split('/')[0] || 'Personal'
+      const arr = groups.get(org) ?? []
+      arr.push(pr)
+      groups.set(org, arr)
+    }
+    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b))
+  }, [filteredPrs])
+
   if (!token) {
-    return <div className="p-6 text-slate-500">Enter a token to load data.</div>
+    return <div className="p-6 text-muted">Enter a token to load data.</div>
   }
 
   if (selectedRepoFullNames.length === 0) {
-    return <div className="p-6 text-slate-500">Select repositories to view pull requests.</div>
+    return <div className="p-6 text-muted">Select repositories to view pull requests.</div>
   }
 
   if (isLoading) {
-    return <div className="p-6 text-slate-500">Loading pull requests…</div>
+    return <div className="p-6 text-muted">Loading pull requests…</div>
   }
 
   if (isError) {
     return (
-      <div className="p-6 text-red-600">Error loading PRs: {error?.message || 'Unknown error'}</div>
+      <div className="p-6 text-danger">Error loading PRs: {error?.message || 'Unknown error'}</div>
     )
   }
 
@@ -74,11 +86,18 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
         query={query}
         onQueryChange={setQuery}
       />
-      <ul className="divide-y divide-slate-200 dark:divide-slate-800">
-        {filteredPrs.map((pr) => (
-          <PRListItem key={pr.id} pr={pr} />
+      <div>
+        {groupedByOrg.map(([org, prs]) => (
+          <section key={org} className="mb-6">
+            <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted">{org}</h3>
+            <ul className="divide-y divide-border/70">
+              {prs.map((pr) => (
+                <PRListItem key={pr.id} pr={pr} />
+              ))}
+            </ul>
+          </section>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
