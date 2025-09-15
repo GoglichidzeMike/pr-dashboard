@@ -31,3 +31,26 @@ export type GithubPullRequest = {
   updated_at: string
   repository?: { name: string; full_name: string }
 }
+
+export type GithubCombinedStatus = {
+  state: 'success' | 'failure' | 'error' | 'pending'
+  statuses: Array<{ state: 'success' | 'failure' | 'error' | 'pending'; context: string }>
+}
+
+export type GithubCheckRun = {
+  status: 'queued' | 'in_progress' | 'completed'
+  conclusion:
+    | null
+    | 'success'
+    | 'failure'
+    | 'neutral'
+    | 'cancelled'
+    | 'skipped'
+    | 'timed_out'
+    | 'action_required'
+}
+
+export type GithubCheckRunsResponse = {
+  total_count: number
+  check_runs: GithubCheckRun[]
+}

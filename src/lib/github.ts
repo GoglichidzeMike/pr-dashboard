@@ -1,4 +1,11 @@
-import type { GithubRepo, GithubPullRequest, GithubUser, GithubOrg } from '../types/github'
+import type {
+  GithubRepo,
+  GithubPullRequest,
+  GithubUser,
+  GithubOrg,
+  GithubCombinedStatus,
+  GithubCheckRunsResponse,
+} from '../types/github'
 
 const GITHUB_API_BASE = 'https://api.github.com'
 
@@ -13,7 +20,7 @@ export class GithubClient {
     this.token = options.token
   }
 
-  private async request<T>(path: string, init?: RequestInit): Promise {
+  private async request<T>(path: string, init?: RequestInit): Promise<T> {
     const response = await fetch(`${GITHUB_API_BASE}${path}`, {
       ...init,
       headers: {
@@ -30,14 +37,14 @@ export class GithubClient {
     return (await response.json()) as T
   }
 
-  async getViewer(): Promise {
+  async getViewer(): Promise<GithubUser> {
     return this.request<GithubUser>('/user')
   }
 
   async listUserRepos(params?: {
     visibility?: 'all' | 'public' | 'private'
     includePersonal?: boolean
-  }): Promise {
+  }): Promise<GithubRepo[]> {
     const visibility = params?.visibility ?? 'all'
     const includePersonal = params?.includePersonal ?? true
     const per_page = 100
@@ -52,7 +59,10 @@ export class GithubClient {
       )
       repos.push(
         ...pageData.map((r) => {
-          const ownerType = (r as any).owner?.type as 'User' | 'Organization' | undefined
+          const ownerType = (r as { owner?: { type?: 'User' | 'Organization' } }).owner?.type as
+            | 'User'
+            | 'Organization'
+            | undefined
           return {
             id: r.id,
             name: r.name,
@@ -68,7 +78,7 @@ export class GithubClient {
     return repos
   }
 
-  async listOrgRepos(org: string): Promise {
+  async listOrgRepos(org: string): Promise<GithubRepo[]> {
     const per_page = 100
     const repos: GithubRepo[] = []
     let page = 1
@@ -91,7 +101,7 @@ export class GithubClient {
     return repos
   }
 
-  async listViewerOrgs(): Promise {
+  async listViewerOrgs(): Promise<GithubOrg[]> {
     const per_page = 100
     const orgs: GithubOrg[] = []
     let page = 1
@@ -110,7 +120,7 @@ export class GithubClient {
     owner: string,
     repo: string,
     state: 'open' | 'closed' | 'all' = 'open',
-  ): Promise {
+  ): Promise<GithubPullRequest[]> {
     const per_page = 100
     const prs: GithubPullRequest[] = []
     let page = 1
@@ -125,11 +135,11 @@ export class GithubClient {
     return prs
   }
 
-  async getCombinedStatus(owner: string, repo: string, ref: string): Promise {
+  async getCombinedStatus(owner: string, repo: string, ref: string): Promise<GithubCombinedStatus> {
     return this.request(`/repos/${owner}/${repo}/commits/${ref}/status`)
   }
 
-  async listCheckRuns(owner: string, repo: string, ref: string): Promise {
+  async listCheckRuns(owner: string, repo: string, ref: string): Promise<GithubCheckRunsResponse> {
     return this.request(`/repos/${owner}/${repo}/commits/${ref}/check-runs`)
   }
 }

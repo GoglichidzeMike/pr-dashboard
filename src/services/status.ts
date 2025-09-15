@@ -14,19 +14,23 @@ export async function fetchPrStatusColor(
       if (anyInProgress) return 'yellow'
       const anyFailure = checks.check_runs.some(
         (c) =>
-          c.conclusion &&
+          c.conclusion !== null &&
           c.conclusion !== 'success' &&
           c.conclusion !== 'skipped' &&
           c.conclusion !== 'neutral',
       )
       return anyFailure ? 'red' : 'green'
     }
-  } catch {}
+  } catch {
+    return 'gray'
+  }
   try {
     const status = await client.getCombinedStatus(owner, repo, sha)
     if (status.state === 'pending') return 'yellow'
     if (status.state === 'success') return 'green'
     if (status.state === 'failure' || status.state === 'error') return 'red'
-  } catch {}
+  } catch {
+    return 'gray'
+  }
   return 'gray'
 }
