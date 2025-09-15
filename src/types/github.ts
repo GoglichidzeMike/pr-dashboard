@@ -26,8 +26,8 @@ export type GithubPullRequest = {
   state: 'open' | 'closed'
   draft: boolean
   user: { login: string }
-  head: { ref: string }
-  base: { ref: string }
+  head: { ref: string; sha?: string }
+  base: { ref: string; sha?: string }
   updated_at: string
   repository?: { name: string; full_name: string }
 }

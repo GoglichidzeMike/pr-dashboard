@@ -1,5 +1,6 @@
 import { useQueries } from '@tanstack/react-query'
 import { fetchRepoPRs } from '../services/repos'
+import { fetchPrStatusColor } from '../services/status'
 
 export function usePullRequests(
   token: string,
@@ -14,6 +15,26 @@ export function usePullRequests(
         queryFn: async () => fetchRepoPRs(token, owner, repo, state),
         enabled: Boolean(token) && repoFullNames.length > 0,
         staleTime: 30_000,
+      }
+    }),
+  })
+}
+
+export function usePrStatuses(
+  token: string,
+  prs: { repository?: { full_name: string }; head: { sha?: string } }[],
+) {
+  return useQueries({
+    queries: prs.map((pr) => {
+      const full = pr.repository?.full_name || ''
+      const [owner, repo] = full.split('/')
+      const sha = pr.head.sha || ''
+      return {
+        queryKey: ['pr-status', token, owner, repo, sha] as const,
+        queryFn: async () =>
+          token && owner && repo && sha ? fetchPrStatusColor(token, owner, repo, sha) : 'gray',
+        enabled: Boolean(token) && Boolean(owner && repo && sha),
+        staleTime: 15_000,
       }
     }),
   })

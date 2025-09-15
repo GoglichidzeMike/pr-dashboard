@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { usePullRequests } from '../api/usePullRequests'
+import { usePullRequests, usePrStatuses } from '../api/usePullRequests'
 import type { GithubPullRequest } from '../types/github'
 import PRListItem from './PRListItem'
 import PRListControls from './PRListControls'
@@ -53,6 +53,17 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
     return list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
   }, [allPrs, hideDrafts, query])
 
+  const statusQueries = usePrStatuses(token, allPrs)
+  const idToStatus = useMemo(() => {
+    const map = new Map<number, 'green' | 'red' | 'yellow' | 'gray'>()
+    statusQueries.forEach((q, idx) => {
+      const pr = allPrs[idx]
+      const color = (q.data as 'green' | 'red' | 'yellow' | 'gray' | undefined) || 'gray'
+      if (pr) map.set(pr.id, color)
+    })
+    return map
+  }, [statusQueries, allPrs])
+
   const groupedByRepo = useMemo(() => {
     const groups = new Map<string, GithubPullRequest[]>()
     for (const pr of filteredPrs) {
@@ -98,9 +109,9 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
             <h3 className="text-muted mb-2 px-2 text-xs font-semibold tracking-wide uppercase">
               {repoFullName}
             </h3>
-            <ul className="divide-border/70 divide-y">
+            <ul className="divide-border/70 space-y-3 divide-y">
               {prs.map((pr) => (
-                <PRListItem key={pr.id} pr={pr} />
+                <PRListItem key={pr.id} pr={pr} statusColor={idToStatus.get(pr.id) || 'gray'} />
               ))}
             </ul>
           </section>

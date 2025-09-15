@@ -124,4 +124,12 @@ export class GithubClient {
     }
     return prs
   }
+
+  async getCombinedStatus(owner: string, repo: string, ref: string): Promise {
+    return this.request(`/repos/${owner}/${repo}/commits/${ref}/status`)
+  }
+
+  async listCheckRuns(owner: string, repo: string, ref: string): Promise {
+    return this.request(`/repos/${owner}/${repo}/commits/${ref}/check-runs`)
+  }
 }
