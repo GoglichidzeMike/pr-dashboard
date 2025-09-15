@@ -16,7 +16,14 @@ export type RepoSidebarProps = {
   onScopeChange: (scope: RepoScope) => void
 }
 
-export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNames, onToggle, headerExtras, scope, onScopeChange }) => {
+export const RepoSidebar: React.FC<RepoSidebarProps> = ({
+  repos,
+  selectedFullNames,
+  onToggle,
+  headerExtras,
+  scope,
+  onScopeChange,
+}) => {
   const selected = new Set(selectedFullNames)
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
@@ -76,7 +83,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
   }
 
   return (
-    <aside className="h-full min-h-screen pt-24 w-72 shrink-0 border-r border-border bg-surface/50 px-4 pb-0">
+    <aside className="border-border bg-surface/50 h-full min-h-screen w-72 shrink-0 border-r px-4 pt-24 pb-0">
       <RepoSidebarHeader right={headerExtras} />
 
       <div className="mb-3">
@@ -90,7 +97,7 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
           <div key={group}>
             <button
               type="button"
-              className="mb-1 mt-2 flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wide text-muted hover:text-fg"
+              className="text-muted hover:text-fg mt-2 mb-1 flex w-full items-center justify-between px-2 text-xs font-semibold tracking-wide uppercase"
               onClick={() => setExpanded((prev) => ({ ...prev, [group]: !(prev[group] ?? true) }))}
               aria-expanded={expanded[group] ?? true}
             >
@@ -100,20 +107,21 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
             {(expanded[group] ?? true) && (
               <div>
                 {repos.map((r) => (
-                  <RepoListItem key={r.id} repo={r} isSelected={selected.has(r.full_name)} onToggle={onToggle} />
+                  <RepoListItem
+                    key={r.id}
+                    repo={r}
+                    isSelected={selected.has(r.full_name)}
+                    onToggle={onToggle}
+                  />
                 ))}
               </div>
             )}
           </div>
         ))}
-        {filtered.length === 0 && (
-          <div className="text-sm text-muted">No repositories match.</div>
-        )}
+        {filtered.length === 0 && <div className="text-muted text-sm">No repositories match.</div>}
       </div>
     </aside>
   )
 }
 
 export default RepoSidebar
-
-

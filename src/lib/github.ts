@@ -13,7 +13,7 @@ export class GithubClient {
     this.token = options.token
   }
 
-  private async request<T>(path: string, init?: RequestInit): Promise<T> {
+  private async request<T>(path: string, init?: RequestInit): Promise {
     const response = await fetch(`${GITHUB_API_BASE}${path}`, {
       ...init,
       headers: {
@@ -30,19 +30,26 @@ export class GithubClient {
     return (await response.json()) as T
   }
 
-  async getViewer(): Promise<GithubUser> {
+  async getViewer(): Promise {
     return this.request<GithubUser>('/user')
   }
 
-  async listUserRepos(params?: { visibility?: 'all' | 'public' | 'private'; includePersonal?: boolean }): Promise<GithubRepo[]> {
+  async listUserRepos(params?: {
+    visibility?: 'all' | 'public' | 'private'
+    includePersonal?: boolean
+  }): Promise {
     const visibility = params?.visibility ?? 'all'
     const includePersonal = params?.includePersonal ?? true
     const per_page = 100
     const repos: GithubRepo[] = []
     let page = 1
     while (true) {
-      const affiliation = includePersonal ? 'owner,collaborator,organization_member' : 'organization_member'
-      const pageData = await this.request<GithubRepo[]>(`/user/repos?visibility=${visibility}&affiliation=${affiliation}&per_page=${per_page}&page=${page}`)
+      const affiliation = includePersonal
+        ? 'owner,collaborator,organization_member'
+        : 'organization_member'
+      const pageData = await this.request<GithubRepo[]>(
+        `/user/repos?visibility=${visibility}&affiliation=${affiliation}&per_page=${per_page}&page=${page}`,
+      )
       repos.push(
         ...pageData.map((r) => {
           const ownerType = (r as any).owner?.type as 'User' | 'Organization' | undefined
@@ -53,7 +60,7 @@ export class GithubClient {
             owner: { login: r.owner.login, type: ownerType },
             private: r.private,
           }
-        })
+        }),
       )
       if (pageData.length < per_page) break
       page += 1
@@ -61,12 +68,14 @@ export class GithubClient {
     return repos
   }
 
-  async listOrgRepos(org: string): Promise<GithubRepo[]> {
+  async listOrgRepos(org: string): Promise {
     const per_page = 100
     const repos: GithubRepo[] = []
     let page = 1
     while (true) {
-      const pageData = await this.request<GithubRepo[]>(`/orgs/${org}/repos?type=all&per_page=${per_page}&page=${page}`)
+      const pageData = await this.request<GithubRepo[]>(
+        `/orgs/${org}/repos?type=all&per_page=${per_page}&page=${page}`,
+      )
       repos.push(
         ...pageData.map((r) => ({
           id: r.id,
@@ -74,7 +83,7 @@ export class GithubClient {
           full_name: r.full_name,
           owner: { login: r.owner.login, type: 'Organization' as const },
           private: r.private,
-        }))
+        })),
       )
       if (pageData.length < per_page) break
       page += 1
@@ -82,12 +91,14 @@ export class GithubClient {
     return repos
   }
 
-  async listViewerOrgs(): Promise<GithubOrg[]> {
+  async listViewerOrgs(): Promise {
     const per_page = 100
     const orgs: GithubOrg[] = []
     let page = 1
     while (true) {
-      const pageData = await this.request<GithubOrg[]>(`/user/orgs?per_page=${per_page}&page=${page}`)
+      const pageData = await this.request<GithubOrg[]>(
+        `/user/orgs?per_page=${per_page}&page=${page}`,
+      )
       orgs.push(...pageData)
       if (pageData.length < per_page) break
       page += 1
@@ -95,12 +106,18 @@ export class GithubClient {
     return orgs
   }
 
-  async listPullRequests(owner: string, repo: string, state: 'open' | 'closed' | 'all' = 'open'): Promise<GithubPullRequest[]> {
+  async listPullRequests(
+    owner: string,
+    repo: string,
+    state: 'open' | 'closed' | 'all' = 'open',
+  ): Promise {
     const per_page = 100
     const prs: GithubPullRequest[] = []
     let page = 1
     while (true) {
-      const pageData = await this.request<GithubPullRequest[]>(`/repos/${owner}/${repo}/pulls?state=${state}&per_page=${per_page}&page=${page}`)
+      const pageData = await this.request<GithubPullRequest[]>(
+        `/repos/${owner}/${repo}/pulls?state=${state}&per_page=${per_page}&page=${page}`,
+      )
       prs.push(...pageData)
       if (pageData.length < per_page) break
       page += 1
@@ -108,5 +125,3 @@ export class GithubClient {
     return prs
   }
 }
-
-

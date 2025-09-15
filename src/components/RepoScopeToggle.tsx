@@ -8,27 +8,52 @@ export type RepoScopeToggleProps = {
   toggleCollapse: () => void
 }
 
-export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({ scope, onChange, toggleCollapse }) => {
+export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({
+  scope,
+  onChange,
+  toggleCollapse,
+}) => {
   return (
-    <div className="mb-3 flex items-center justify-between gap-2 text-xs text-fg">
+    <div className="text-fg mb-3 flex items-center justify-between gap-2 text-xs">
       <div className="flex items-center gap-2">
         <label className="flex items-center gap-1">
-          <input type="radio" name="scope" className="accent-accent" checked={scope === 'all'} onChange={() => onChange('all')} />
+          <input
+            type="radio"
+            name="scope"
+            className="accent-accent"
+            checked={scope === 'all'}
+            onChange={() => onChange('all')}
+          />
           All
         </label>
         <label className="flex items-center gap-1">
-          <input type="radio" name="scope" className="accent-accent" checked={scope === 'orgs'} onChange={() => onChange('orgs')} />
+          <input
+            type="radio"
+            name="scope"
+            className="accent-accent"
+            checked={scope === 'orgs'}
+            onChange={() => onChange('orgs')}
+          />
           Orgs
         </label>
         <label className="flex items-center gap-1">
-          <input type="radio" name="scope" className="accent-accent" checked={scope === 'personal'} onChange={() => onChange('personal')} />
+          <input
+            type="radio"
+            name="scope"
+            className="accent-accent"
+            checked={scope === 'personal'}
+            onChange={() => onChange('personal')}
+          />
           Personal
         </label>
       </div>
       <div className="flex items-center gap-2">
-        <div onClick={toggleCollapse} className="text-muted hover:underline cursor-pointer flex gap-2">
-          <NavArrowUp className="w-4 h-4" />
-          <NavArrowDown className="w-4 h-4" />
+        <div
+          onClick={toggleCollapse}
+          className="text-muted flex cursor-pointer gap-2 hover:underline"
+        >
+          <NavArrowUp className="h-4 w-4" />
+          <NavArrowDown className="h-4 w-4" />
         </div>
       </div>
     </div>
@@ -36,5 +61,3 @@ export const RepoScopeToggle: React.FC<RepoScopeToggleProps> = ({ scope, onChang
 }
 
 export default RepoScopeToggle
-
-

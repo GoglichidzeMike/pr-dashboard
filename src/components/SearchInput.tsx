@@ -6,18 +6,20 @@ export type SearchInputProps = {
   placeholder?: string
 }
 
-export const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, placeholder = 'Search' }) => {
+export const SearchInput: React.FC<SearchInputProps> = ({
+  value,
+  onChange,
+  placeholder = 'Search',
+}) => {
   return (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus:border-border focus:ring-2 focus:ring-accent/20"
+      className="border-border bg-surface text-fg placeholder:text-muted focus:border-border focus:ring-accent/20 w-full rounded-md border px-3 py-2 text-sm shadow-sm outline-none focus:ring-2"
     />
   )
 }
 
 export default SearchInput
-
-

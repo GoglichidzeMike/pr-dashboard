@@ -14,14 +14,21 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
   const [hideDrafts, setHideDrafts] = useState<boolean>(false)
   const [query, setQuery] = useState<string>('')
 
-  const dedupSelected = useMemo(() => Array.from(new Set(selectedRepoFullNames)), [selectedRepoFullNames])
+  const dedupSelected = useMemo(
+    () => Array.from(new Set(selectedRepoFullNames)),
+    [selectedRepoFullNames],
+  )
   const queries = usePullRequests(token, dedupSelected, stateFilter)
 
   const isLoading = queries.some((q) => q.isLoading)
   const isError = queries.some((q) => q.isError)
   const error = queries.find((q) => q.error)?.error as Error | undefined
-  const allPrs: GithubPullRequest[] = queries
-    .flatMap((q, idx) => (q.data || []).map((pr) => ({ ...pr, repository: { name: dedupSelected[idx].split('/')[1], full_name: dedupSelected[idx] } })))
+  const allPrs: GithubPullRequest[] = queries.flatMap((q, idx) =>
+    (q.data || []).map((pr: GithubPullRequest) => ({
+      ...pr,
+      repository: { name: dedupSelected[idx].split('/')[1], full_name: dedupSelected[idx] },
+    })),
+  )
 
   const filteredPrs: GithubPullRequest[] = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -58,20 +65,20 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
   }, [filteredPrs])
 
   if (!token) {
-    return <div className="p-6 text-muted">Enter a token to load data.</div>
+    return <div className="text-muted p-6">Enter a token to load data.</div>
   }
 
   if (selectedRepoFullNames.length === 0) {
-    return <div className="p-6 text-muted">Select repositories to view pull requests.</div>
+    return <div className="text-muted p-6">Select repositories to view pull requests.</div>
   }
 
   if (isLoading) {
-    return <div className="p-6 text-muted">Loading pull requests…</div>
+    return <div className="text-muted p-6">Loading pull requests…</div>
   }
 
   if (isError) {
     return (
-      <div className="p-6 text-danger">Error loading PRs: {error?.message || 'Unknown error'}</div>
+      <div className="text-danger p-6">Error loading PRs: {error?.message || 'Unknown error'}</div>
     )
   }
 
@@ -88,8 +95,10 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
       <div>
         {groupedByRepo.map(([repoFullName, prs]) => (
           <section key={repoFullName} className="mb-6">
-            <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted">{repoFullName}</h3>
-            <ul className="divide-y divide-border/70">
+            <h3 className="text-muted mb-2 px-2 text-xs font-semibold tracking-wide uppercase">
+              {repoFullName}
+            </h3>
+            <ul className="divide-border/70 divide-y">
               {prs.map((pr) => (
                 <PRListItem key={pr.id} pr={pr} />
               ))}
@@ -102,5 +111,3 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
 }
 
 export default PRList
-
-

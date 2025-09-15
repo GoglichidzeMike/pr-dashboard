@@ -7,23 +7,19 @@ export type PRListItemProps = {
 
 export const PRListItem: React.FC<PRListItemProps> = ({ pr }) => {
   return (
-    <li className="py-3 border rounded-2xl px-4 border-border">
-      <a
-        href={pr.html_url}
-        target="_blank"
-        rel="noreferrer"
-        className="group block"
-      >
+    <li className="border-border rounded-2xl border px-4 py-3">
+      <a href={pr.html_url} target="_blank" rel="noreferrer" className="group block">
         <div className="flex items-baseline justify-between gap-4">
           <div className="min-w-0">
-            <div className="truncate text-base font-medium text-fg group-hover:underline">
+            <div className="text-fg truncate text-base font-medium group-hover:underline">
               {pr.title}
             </div>
-            <div className="mt-1 truncate text-xs text-muted">
-              {pr.repository?.full_name} • #{pr.number} • {pr.user.login} • {pr.draft ? 'draft' : pr.state}
+            <div className="text-muted mt-1 truncate text-xs">
+              {pr.repository?.full_name} • #{pr.number} • {pr.user.login} •{' '}
+              {pr.draft ? 'draft' : pr.state}
             </div>
           </div>
-          <div className="shrink-0 text-xs text-muted">
+          <div className="text-muted shrink-0 text-xs">
             {new Date(pr.updated_at).toLocaleString()}
           </div>
         </div>
@@ -33,5 +29,3 @@ export const PRListItem: React.FC<PRListItemProps> = ({ pr }) => {
 }
 
 export default PRListItem
-
-

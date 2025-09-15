@@ -5,15 +5,16 @@ export type RepoSidebarHeaderProps = {
   right?: React.ReactNode
 }
 
-export const RepoSidebarHeader: React.FC<RepoSidebarHeaderProps> = ({ title = 'Repositories', right }) => {
+export const RepoSidebarHeader: React.FC<RepoSidebarHeaderProps> = ({
+  title = 'Repositories',
+  right,
+}) => {
   return (
     <div className="mb-3 flex items-center justify-between gap-2">
-      <h2 className="text-sm font-semibold text-muted">{title}</h2>
+      <h2 className="text-muted text-sm font-semibold">{title}</h2>
       {right}
     </div>
   )
 }
 
 export default RepoSidebarHeader
-
-

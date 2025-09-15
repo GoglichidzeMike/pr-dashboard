@@ -21,5 +21,3 @@ export function useRepos(token: string, includePersonal: boolean) {
 export function useSelectedDedup(selectedFullNames: string[]) {
   return useMemo(() => Array.from(new Set(selectedFullNames)), [selectedFullNames])
 }
-
-

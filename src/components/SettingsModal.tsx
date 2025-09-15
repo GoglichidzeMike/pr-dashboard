@@ -7,7 +7,12 @@ export type SettingsModalProps = {
   onIncludePersonalChange: (value: boolean) => void
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, includePersonal, onIncludePersonalChange }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({
+  open,
+  onClose,
+  includePersonal,
+  onIncludePersonalChange,
+}) => {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -38,5 +43,3 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, inc
 }
 
 export default SettingsModal
-
-

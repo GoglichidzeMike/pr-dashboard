@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -15,17 +15,24 @@
 }
 
 /* Help browsers draw default UI (inputs, scrollbars) in the right scheme */
-html { color-scheme: light; }
-html.dark, html[data-theme="dark"] { color-scheme: dark; }
+html {
+  color-scheme: light;
+}
+html.dark,
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
 
 /* Base document colors driven by tokens */
-html, body, #root {
+html,
+body,
+#root {
   background-color: var(--color-bg);
   color: var(--color-fg);
 }
 
 /* Runtime dark theme override (works with class or attribute on <html>) */
-html[data-theme="dark"],
+html[data-theme='dark'],
 html.dark {
   --color-bg: oklch(13% 0.02 255);
   --color-fg: oklch(96% 0.02 255);

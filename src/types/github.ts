@@ -31,5 +31,3 @@ export type GithubPullRequest = {
   updated_at: string
   repository?: { name: string; full_name: string }
 }
-
-

@@ -27,14 +27,14 @@ export const TokenInput: React.FC<TokenInputProps> = ({ value, onChange }) => {
     <div className="flex items-center gap-2">
       <input
         type="password"
-        className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg shadow-sm outline-none placeholder:text-muted focus:border-border focus:ring-2 focus:ring-accent/20"
+        className="border-border bg-surface text-fg placeholder:text-muted focus:border-border focus:ring-accent/20 w-full rounded-md border px-3 py-2 text-sm shadow-sm outline-none focus:ring-2"
         placeholder="GitHub Personal Access Token"
         value={token}
         onChange={(e) => setToken(e.target.value)}
       />
       <button
         onClick={handleSave}
-        className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-fg hover:opacity-90 active:opacity-100"
+        className="bg-accent text-accent-fg rounded-md px-3 py-2 text-sm font-medium hover:opacity-90 active:opacity-100"
       >
         Save
       </button>
