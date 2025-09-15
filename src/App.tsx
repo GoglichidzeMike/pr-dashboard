@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { GithubClient } from './lib/github'
+import { useRepos } from './api/useRepos'
 import type { GithubRepo } from './types/github'
 import TokenInput from './components/TokenInput'
 import RepoSidebar, { type RepoScope } from './components/RepoSidebar'
@@ -12,14 +11,7 @@ const App: React.FC = () => {
   const [selected, setSelected] = useState<string[]>([])
   const [scope, setScope] = useState<RepoScope>('all')
 
-  const client = useMemo(() => (token ? new GithubClient({ token }) : null), [token])
-
-  const { data: userRepos = [], isLoading: isLoadingUser, isError: isUserError, error: userError } = useQuery<GithubRepo[]>({
-    queryKey: ['repos', 'user', token],
-    queryFn: async () => (client ? client.listUserRepos({ visibility: 'all' }) : []),
-    enabled: Boolean(client),
-    staleTime: 60_000,
-  })
+  const { data: userRepos = [], isLoading: isLoadingUser, isError: isUserError, error: userError } = useRepos(token)
   // Dedupe repos by full_name; /user/repos already includes org repos with proper affiliation
   const allRepos: GithubRepo[] = useMemo(() => {
     const map = new Map<string, GithubRepo>()

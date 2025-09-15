@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { GithubRepo } from '../types/github'
+import RepoListItem from './RepoListItem'
+import RepoSidebarHeader from './RepoSidebarHeader'
+import RepoScopeToggle from './RepoScopeToggle'
+import SearchInput from './SearchInput'
 
 export type RepoScope = 'all' | 'orgs' | 'personal'
 
@@ -70,59 +74,13 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
 
   return (
     <aside className="h-full w-72 shrink-0 border-r border-slate-200 bg-white/50 p-4 dark:border-slate-800 dark:bg-slate-900/50">
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-slate-500">Repositories</h2>
-        {headerExtras}
-      </div>
+      <RepoSidebarHeader right={headerExtras} />
 
       <div className="mb-3">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search repos"
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
-        />
+        <SearchInput value={query} onChange={setQuery} placeholder="Search repos" />
       </div>
 
-      <div className="mb-3 flex items-center justify-between gap-2 text-xs">
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              name="scope"
-              className="accent-slate-700"
-              checked={scope === 'all'}
-              onChange={() => onScopeChange('all')}
-            />
-            All
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              name="scope"
-              className="accent-slate-700"
-              checked={scope === 'orgs'}
-              onChange={() => onScopeChange('orgs')}
-            />
-            Orgs
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="radio"
-              name="scope"
-              className="accent-slate-700"
-              checked={scope === 'personal'}
-              onChange={() => onScopeChange('personal')}
-            />
-            Personal
-          </label>
-        </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={() => setAllGroups(true)} className="text-slate-500 hover:underline">Expand all</button>
-          <button type="button" onClick={() => setAllGroups(false)} className="text-slate-500 hover:underline">Collapse all</button>
-        </div>
-      </div>
+      <RepoScopeToggle scope={scope} onChange={onScopeChange} onExpandAll={() => setAllGroups(true)} onCollapseAll={() => setAllGroups(false)} />
 
       <div className="flex max-h-[calc(100vh-14rem)] flex-col gap-2 overflow-auto pr-2">
         {groups.map(([group, repos]) => (
@@ -138,22 +96,9 @@ export const RepoSidebar: React.FC<RepoSidebarProps> = ({ repos, selectedFullNam
             </button>
             {(expanded[group] ?? true) && (
               <div>
-                {repos.map((r) => {
-                  const full = r.full_name
-                  const nameOnly = r.name
-                  const isChecked = selected.has(full)
-                  return (
-                    <label key={r.id} className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 shrink-0 accent-slate-700"
-                        checked={isChecked}
-                        onChange={() => onToggle(full)}
-                      />
-                      <span className="truncate text-sm">{nameOnly}</span>
-                    </label>
-                  )
-                })}
+                {repos.map((r) => (
+                  <RepoListItem key={r.id} repo={r} isSelected={selected.has(r.full_name)} onToggle={onToggle} />
+                ))}
               </div>
             )}
           </div>
