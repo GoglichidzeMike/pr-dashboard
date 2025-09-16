@@ -9,7 +9,7 @@ import { usePersistentFlag } from './hooks/usePersistentFlag'
 import { useSelectedRepos } from './hooks/useSelectedRepos'
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<string>('')
+  const [token, setToken] = useState<string>(localStorage.getItem('gh_token') || '')
   const { selected, toggleRepo } = useSelectedRepos()
   const [scope, setScope] = useState<RepoScope>('all')
   const [includePersonal, setIncludePersonal] = usePersistentFlag(

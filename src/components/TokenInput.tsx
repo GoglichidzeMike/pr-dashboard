@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 export type TokenInputProps = {
   value?: string
@@ -9,14 +9,6 @@ const LOCAL_STORAGE_KEY = 'gh_token'
 
 export const TokenInput: React.FC<TokenInputProps> = ({ value, onChange }) => {
   const [token, setToken] = useState<string>(value ?? '')
-
-  useEffect(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (!value && saved) {
-      setToken(saved)
-      onChange(saved)
-    }
-  }, [value, onChange])
 
   const handleSave = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, token)
