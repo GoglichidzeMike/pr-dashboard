@@ -5,6 +5,7 @@ import type {
   GithubOrg,
   GithubCombinedStatus,
   GithubCheckRunsResponse,
+  GithubMergeResult,
 } from '../types/github'
 
 const GITHUB_API_BASE = 'https://api.github.com'
@@ -141,5 +142,26 @@ export class GithubClient {
 
   async listCheckRuns(owner: string, repo: string, ref: string): Promise<GithubCheckRunsResponse> {
     return this.request(`/repos/${owner}/${repo}/commits/${ref}/check-runs`)
+  }
+
+  async mergePullRequest(
+    owner: string,
+    repo: string,
+    pullNumber: number,
+    options?: {
+      merge_method?: 'merge' | 'squash' | 'rebase'
+      commit_title?: string
+      commit_message?: string
+    },
+  ): Promise<GithubMergeResult> {
+    return this.request(`/repos/${owner}/${repo}/pulls/${pullNumber}/merge`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        merge_method: options?.merge_method || 'merge',
+        commit_title: options?.commit_title,
+        commit_message: options?.commit_message,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

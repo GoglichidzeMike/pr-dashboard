@@ -1,5 +1,5 @@
 import { GithubClient } from '../lib/github'
-import type { GithubPullRequest, GithubRepo } from '../types/github'
+import type { GithubPullRequest, GithubRepo, GithubMergeResult } from '../types/github'
 
 export async function fetchUserRepos(
   token: string,
@@ -17,4 +17,19 @@ export async function fetchRepoPRs(
 ): Promise<GithubPullRequest[]> {
   const client = new GithubClient({ token })
   return client.listPullRequests(owner, repo, state)
+}
+
+export async function mergePullRequest(
+  token: string,
+  owner: string,
+  repo: string,
+  pullNumber: number,
+  options?: {
+    merge_method?: 'merge' | 'squash' | 'rebase'
+    commit_title?: string
+    commit_message?: string
+  },
+): Promise<GithubMergeResult> {
+  const client = new GithubClient({ token })
+  return client.mergePullRequest(owner, repo, pullNumber, options)
 }

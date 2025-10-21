@@ -113,7 +113,12 @@ export const PRList: React.FC<PRListProps> = ({ token, selectedRepoFullNames }) 
             </h3>
             <ul className="divide-border/70 space-y-3 divide-y">
               {prs.map((pr) => (
-                <PRListItem key={pr.id} pr={pr} statusColor={idToStatus.get(pr.id) || 'gray'} />
+                <PRListItem
+                  key={pr.id}
+                  pr={pr}
+                  statusColor={idToStatus.get(pr.id) || 'gray'}
+                  token={token}
+                />
               ))}
             </ul>
           </section>

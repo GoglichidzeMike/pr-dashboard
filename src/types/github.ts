@@ -54,3 +54,9 @@ export type GithubCheckRunsResponse = {
   total_count: number
   check_runs: GithubCheckRun[]
 }
+
+export type GithubMergeResult = {
+  sha: string
+  merged: boolean
+  message: string
+}
